@@ -13,6 +13,8 @@ import {
 import {dummyData, icons, images, SIZES, COLORS, FONTS} from '../constants';
 
 const COUNTRIES_ITEM_SIZE = SIZES.width / 3;
+const PLACES_ITEM_SIZE =
+    Platform.OS === 'ios' ? SIZES.width / 1.25 : SIZES.width / 1.2;
 
 const Dashboard = ({navigation}) => {
     const countryScrollX = useRef(new Animated.Value(0)).current;
@@ -20,6 +22,12 @@ const Dashboard = ({navigation}) => {
     const [countries, setCountries] = useState([
         {id: -1},
         ...dummyData.countries,
+        {id: -2},
+    ]);
+
+    const [places, setPlaces] = useState([
+        {id: -1},
+        ...dummyData.countries[0].places,
         {id: -2},
     ]);
 
@@ -44,7 +52,7 @@ const Dashboard = ({navigation}) => {
                     <Image
                         source={icons.side_drawer}
                         resizeMode="contain"
-                        style={{withe: 25, height: 25, tintColor: COLORS.white}}
+                        style={{width: 25, height: 25, tintColor: COLORS.white}}
                     />
                 </TouchableOpacity>
                 {/* {Label Title} */}
@@ -54,7 +62,7 @@ const Dashboard = ({navigation}) => {
                         alignItems: 'center',
                         justifyContent: 'center',
                     }}>
-                    <Text style={{color: COLORS.white, ...FONTS}}>ASIA</Text>
+                    <Text style={{color: COLORS.white, ...FONTS.h3}}>ASIA</Text>
                 </View>
                 {/* {Profiler} */}
                 <TouchableOpacity onPress={() => console.log('Profiler')}>
@@ -78,7 +86,7 @@ const Dashboard = ({navigation}) => {
                 horizontal
                 pagingEnabled
                 snapToAlignment="center"
-                snapToAlignment={COUNTRIES_ITEM_SIZE}
+                snapToInterval={COUNTRIES_ITEM_SIZE}
                 showsHorizontalScrollIndicator={false}
                 scrollEventThrottle={16}
                 decelerationRate={0}
@@ -127,10 +135,8 @@ const Dashboard = ({navigation}) => {
                         extrapolate: 'clamp',
                     });
 
-                    if (index === 0 || index === countries.length - 1) {
-                        return (
-                            <View style={{width: COUNTRIES_ITEM_SIZE}}></View>
-                        );
+                    if (index == 0 || index == countries.length - 1) {
+                        return <View style={{width: COUNTRIES_ITEM_SIZE}} />;
                     } else {
                         return (
                             <Animated.View
@@ -150,12 +156,16 @@ const Dashboard = ({navigation}) => {
                                         tintColor: COLORS.white,
                                     }}
                                 />
+                                <Animated.Text
+                                    style={{
+                                        marginTop: 3,
+                                        color: COLORS.white,
+                                        ...FONTS.h1,
+                                        fontSize: fontSize,
+                                    }}>
+                                    {item.name}
+                                </Animated.Text>
                             </Animated.View>
-                            // <View>
-                            //     <Text style={{color: COLORS.white}}>
-                            //         {item.name}
-                            //     </Text>
-                            // </View>
                         );
                     }
                 }}
@@ -175,6 +185,13 @@ const Dashboard = ({navigation}) => {
                     {/* Countries */}
                     <View>{renderCountries()}</View>
                     {/* Places */}
+
+                    <View
+                        style={{
+                            height: Platform.OS === 'ios' ? 500 : 450,
+                        }}>
+                        {/* {renderPlaces()} */}
+                    </View>
                 </View>
             </ScrollView>
         </SafeAreaView>
