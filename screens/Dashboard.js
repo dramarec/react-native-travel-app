@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import {dummyData, icons, images, SIZES, COLORS, FONTS} from '../constants';
+import {NewTextButton} from '../components';
 
 const COUNTRIES_ITEM_SIZE = SIZES.width / 3;
 const PLACES_ITEM_SIZE =
@@ -251,7 +252,7 @@ const Dashboard = ({navigation}) => {
                                 opacity={opacity}
                                 style={{
                                     width: PLACES_ITEM_SIZE,
-                                    // height: height,
+                                    height: height,
                                     height: 400,
                                     alignItems: 'center',
                                     borderRadius: 20,
@@ -267,6 +268,40 @@ const Dashboard = ({navigation}) => {
                                         borderRadius: 20,
                                     }}
                                 />
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        alignItems: 'center',
+                                        justifyContent: 'flex-end',
+                                        marginHorizontal: SIZES.padding,
+                                    }}>
+                                    <Text
+                                        style={{
+                                            marginBottom: SIZES.radius,
+                                            color: COLORS.white,
+                                            ...FONTS.h1,
+                                        }}>
+                                        {item.name}
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            marginBottom: SIZES.padding * 2,
+                                            textAlign: 'center',
+                                            color: COLORS.white,
+                                            ...FONTS.body3,
+                                        }}>
+                                        {item.description}
+                                    </Text>
+
+                                    <NewTextButton
+                                        label="Explore"
+                                        customContainerStyle={{
+                                            position: 'absolute',
+                                            bottom: -20,
+                                            width: 150,
+                                        }}
+                                    />
+                                </View>
                             </Animated.View>
                         );
                     }
