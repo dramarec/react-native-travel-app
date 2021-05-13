@@ -1,3 +1,4 @@
 import NewTextButton from './TextButton';
+import HeaderBar from './HeaderBar';
 
-export {NewTextButton};
+export {NewTextButton, HeaderBar};
