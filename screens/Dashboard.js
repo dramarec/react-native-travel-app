@@ -35,6 +35,8 @@ const Dashboard = ({navigation}) => {
         {id: -2},
     ]);
 
+    const [placesScrollPosition, setPlacesScrollPosition] = useState(0);
+
     function renderHeader() {
         return (
             <View
@@ -81,6 +83,15 @@ const Dashboard = ({navigation}) => {
         );
     }
 
+    //onPress button
+    function exploreButtonHandler() {
+        //get places current index
+        const currentIndex = parseInt(placesScrollPosition, 10) + 1;
+        //navigate to the next screen
+        console.log(' places[currentIndex]===>', places[currentIndex]);
+        navigation.navigate('Place', {selectedPlace: places[currentIndex]});
+    }
+
     function renderCountries() {
         return (
             <Animated.FlatList
@@ -107,7 +118,8 @@ const Dashboard = ({navigation}) => {
                 )}
                 onMomentumScrollEnd={event => {
                     // colculate position
-                    var position = (
+                    let position = //?var
+                    (
                         event.nativeEvent.contentOffset.x / COUNTRIES_ITEM_SIZE
                     ).toFixed(0);
 
@@ -219,6 +231,14 @@ const Dashboard = ({navigation}) => {
                     ],
                     {useNativeDriver: false},
                 )}
+                onMomentumScrollEnd={event => {
+                    // colculate position
+                    var position = (
+                        event.nativeEvent.contentOffset.x / PLACES_ITEM_SIZE
+                    ).toFixed(0);
+                    //setplace scroll position
+                    setPlacesScrollPosition(position);
+                }}
                 renderItem={({item, index}) => {
                     const opacity = placesScrollX.interpolate({
                         inputRange: [
@@ -312,6 +332,7 @@ const Dashboard = ({navigation}) => {
                                             bottom: -20,
                                             width: 150,
                                         }}
+                                        onPress={() => exploreButtonHandler()}
                                     />
                                 </View>
                             </Animated.View>
