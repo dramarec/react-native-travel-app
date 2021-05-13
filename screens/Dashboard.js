@@ -34,7 +34,6 @@ const Dashboard = ({navigation}) => {
         ...dummyData.countries[0].places,
         {id: -2},
     ]);
-    console.log('Dashboard ===> places', places);
 
     function renderHeader() {
         return (
@@ -106,6 +105,19 @@ const Dashboard = ({navigation}) => {
                     ],
                     {useNativeDriver: false},
                 )}
+                onMomentumScrollEnd={event => {
+                    // colculate position
+                    var position = (
+                        event.nativeEvent.contentOffset.x / COUNTRIES_ITEM_SIZE
+                    ).toFixed(0);
+
+                    //set place
+                    setPlaces([
+                        {id: -1},
+                        ...dummyData.countries[position].places,
+                        {id: -2},
+                    ]);
+                }}
                 renderItem={({item, index}) => {
                     const opacity = countryScrollX.interpolate({
                         inputRange: [
