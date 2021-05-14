@@ -4,6 +4,13 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 platform :ios, '10.0'
 
 target 'newtestproject' do
+   # ////
+    # !MyGoogleMaps React Native Maps dependencies
+  rn_maps_path = '../node_modules/react-native-maps'
+  pod 'react-native-google-maps', :path => rn_maps_path
+  pod 'GoogleMaps'
+  pod 'Google-Maps-iOS-Utils'
+  # ////
   config = use_native_modules!
 
   use_react_native!(
@@ -11,6 +18,10 @@ target 'newtestproject' do
     # to enable hermes on iOS, change `false` to `true` and then install pods
     :hermes_enabled => false
   )
+  # ////
+    # !MyGoogleMaps React Native Maps dependencies
+  pod 'react-native-maps', :path => '../node_modules/react-native-maps'
+  # ////
 
   target 'newtestprojectTests' do
     inherit! :complete

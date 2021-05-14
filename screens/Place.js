@@ -1,10 +1,12 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {View, Text, Image, ImageBackground} from 'react-native';
 import SlidingUpPanel from 'rn-sliding-up-panel';
+import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 
 import {HeaderBar, TextIconButton} from '../components';
-
 import {icons, SIZES, COLORS, FONTS} from '../constants';
+
+import {MapStyle} from '../styles';
 
 const Place = ({navigation, route}) => {
     const [selectedPlace, setSelectedPlace] = useState(null);
@@ -138,7 +140,18 @@ const Place = ({navigation, route}) => {
                             backgroundColor: COLORS.white,
                             alignItems: 'center',
                             justifyContent: 'center',
-                        }}></View>
+                        }}>
+                        <MapView
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                            }}
+                            customMapStyle={MapStyle}
+                            provider={PROVIDER_GOOGLE}
+                            initialRegion={
+                                selectedPlace?.mapInitialRegion
+                            }></MapView>
+                    </View>
                 </View>
             </SlidingUpPanel>
         );
