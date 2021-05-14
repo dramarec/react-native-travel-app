@@ -88,7 +88,7 @@ const Dashboard = ({navigation}) => {
         //get places current index
         const currentIndex = parseInt(placesScrollPosition, 10) + 1;
         //navigate to the next screen
-        console.log(' places[currentIndex]===>', places[currentIndex]);
+        // console.log(' places[currentIndex]===>', places[currentIndex]);
         navigation.navigate('Place', {selectedPlace: places[currentIndex]});
     }
 
@@ -233,7 +233,8 @@ const Dashboard = ({navigation}) => {
                 )}
                 onMomentumScrollEnd={event => {
                     // colculate position
-                    var position = (
+                    let position = //?var
+                    (
                         event.nativeEvent.contentOffset.x / PLACES_ITEM_SIZE
                     ).toFixed(0);
                     //setplace scroll position

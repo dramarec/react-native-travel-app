@@ -1,23 +1,44 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, Text, Image, ImageBackground} from 'react-native';
+import {
+    View,
+    Text,
+    Image,
+    Animated,
+    ImageBackground,
+    Platform,
+} from 'react-native';
 import SlidingUpPanel from 'rn-sliding-up-panel';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 
-import {HeaderBar, TextIconButton} from '../components';
+import {HeaderBar, TextIconButton, NewTextButton, Rating} from '../components';
 import {icons, SIZES, COLORS, FONTS} from '../constants';
 
 import {MapStyle} from '../styles';
+// import Animated from 'react-native-reanimated';
 
 const Place = ({navigation, route}) => {
     const [selectedPlace, setSelectedPlace] = useState(null);
-    console.log('Place ===> selectedPlace', selectedPlace);
     const [selectedHotel, setSelectedHotel] = useState(null);
+
+    const [allowDragging, setAllowDragging] = useState(true);
+
+    const _draggedValue = useRef(new Animated.Value(0)).current;
 
     let _panel = useRef(null);
 
     useEffect(() => {
         let {selectedPlace} = route.params;
         setSelectedPlace(selectedPlace);
+
+        _draggedValue.addListener(valueObj => {
+            if (valueObj.value > SIZES.height) {
+                setAllowDragging(false);
+            }
+        });
+
+        return () => {
+            _draggedValue.removeAllListener();
+        };
     }, []);
 
     function renderPlace() {
@@ -100,14 +121,19 @@ const Place = ({navigation, route}) => {
         return (
             <SlidingUpPanel
                 ref={c => (_panel = c)}
+                allowDragging={allowDragging}
                 draggableRange={{
                     top: SIZES.height + 120,
                     bottom: 120,
                 }}
+                animatedValue={_draggedValue}
                 showBackdrop={false}
                 snappingPoints={[SIZES.height + 120]}
                 height={SIZES.height + 120}
-                friction={0.7}>
+                friction={0.7}
+                onBottomReached={() => {
+                    setAllowDragging(true);
+                }}>
                 <View
                     style={{
                         flex: 1,
@@ -173,6 +199,116 @@ const Place = ({navigation, route}) => {
                                 </Marker>
                             ))}
                         </MapView>
+
+                        {/* Header */}
+                        <HeaderBar
+                            title={selectedPlace?.name}
+                            leftOnPressed={() => _panel.hide()}
+                            right={true}
+                            containerStyle={{
+                                position: 'absolute',
+                                top: SIZES.padding * 2,
+                            }}
+                        />
+                        {/* Hotel details */}
+                        {selectedHotel && (
+                            <View
+                                style={{
+                                    position: 'absolute',
+                                    bottom: 30,
+                                    left: 0,
+                                    right: 0,
+                                    padding: SIZES.radius,
+                                }}>
+                                <Text
+                                    style={{
+                                        color: COLORS.white,
+                                        ...FONTS.h1,
+                                    }}>
+                                    Hotels in {selectedPlace?.name}
+                                </Text>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        marginTop: SIZES.radius,
+                                        padding: SIZES.radius,
+                                        backgroundColor:
+                                            COLORS.transparentBlack1,
+                                        borderRadius: 15,
+                                    }}>
+                                    <Image
+                                        source={selectedHotel?.image}
+                                        resizeMode="cover"
+                                        style={{
+                                            width: 90,
+                                            height: 120,
+                                            borderRadius: 15,
+                                        }}
+                                    />
+                                    <View
+                                        style={{
+                                            flex: 1,
+                                            marginLeft: SIZES.radius,
+                                            justifyContent: 'center',
+                                        }}>
+                                        <Text
+                                            style={{
+                                                color: COLORS.white,
+                                                ...FONTS.h3,
+                                            }}>
+                                            {selectedHotel?.name}
+                                        </Text>
+                                        <Rating
+                                            containerStyle={{
+                                                marginTop: SIZES.base,
+                                            }}
+                                            rate={selectedHotel?.rate}
+                                        />
+
+                                        <View
+                                            style={{
+                                                flexDirection: 'row',
+                                                marginTop: SIZES.base,
+                                            }}>
+                                            <NewTextButton
+                                                label="Details"
+                                                customContainerStyle={{
+                                                    marginTop: SIZES.base,
+                                                    height: 45,
+                                                    width: 100,
+                                                }}
+                                                customLabelStyle={{
+                                                    ...FONTS.h3,
+                                                }}
+                                                onPress={() =>
+                                                    console.log('Details')
+                                                }
+                                            />
+                                            <View
+                                                style={{
+                                                    flex: 1,
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                }}>
+                                                <Text
+                                                    style={{
+                                                        color: COLORS.lightGray,
+                                                        ...FONTS.body5,
+                                                        fontSize:
+                                                            Platform.OS ===
+                                                            'ios'
+                                                                ? SIZES.body4
+                                                                : SIZES.body5,
+                                                    }}>
+                                                    from ${selectedHotel?.price}{' '}
+                                                    / night
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    </View>
+                                </View>
+                            </View>
+                        )}
                     </View>
                 </View>
             </SlidingUpPanel>
