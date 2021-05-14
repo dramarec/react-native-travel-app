@@ -11,6 +11,7 @@ import {MapStyle} from '../styles';
 const Place = ({navigation, route}) => {
     const [selectedPlace, setSelectedPlace] = useState(null);
     console.log('Place ===> selectedPlace', selectedPlace);
+    const [selectedHotel, setSelectedHotel] = useState(null);
 
     let _panel = useRef(null);
 
@@ -148,9 +149,30 @@ const Place = ({navigation, route}) => {
                             }}
                             customMapStyle={MapStyle}
                             provider={PROVIDER_GOOGLE}
-                            initialRegion={
-                                selectedPlace?.mapInitialRegion
-                            }></MapView>
+                            initialRegion={selectedPlace?.mapInitialRegion}>
+                            {selectedPlace?.hotels.map((hotel, index) => (
+                                <Marker
+                                    key={index}
+                                    coordinate={hotel.latlng}
+                                    identifer={hotel.id}
+                                    onPress={() => {
+                                        setSelectedHotel(hotel);
+                                    }}>
+                                    <Image
+                                        source={
+                                            selectedHotel?.id == hotel.id
+                                                ? icons.bed_on
+                                                : icons.bed_off
+                                        }
+                                        resizeMode="contain"
+                                        style={{
+                                            width: 50,
+                                            height: 50,
+                                        }}
+                                    />
+                                </Marker>
+                            ))}
+                        </MapView>
                     </View>
                 </View>
             </SlidingUpPanel>
